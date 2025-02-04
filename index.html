@@ -62,7 +62,7 @@
     <main id="container">
         <div id="side-panel">
 
-            <h2>California Earthquakes Since 1769 (5.0+ Magnitude)</h2>
+            <h2>California Earthquakes: 5.0+ Magnitude (2000-2015)</h2>
             <button>Sort by Magnitude</button>
 
             <table>
@@ -90,9 +90,9 @@
 
         async function geojsonFetch() {
 
-            let response, caearthquakes, california, table;
-            response = await fetch('assets/california-earthquakes.geojson');
-            caearthquakes = await response.json();
+            let response, earthquakes, california, table;
+            response = await fetch('assets/caearthquakes.geojson');
+            earthquakes = await response.json();
             response = await fetch('assets/california.geojson');
             california = await response.json();
 
@@ -100,17 +100,17 @@
             table = document.getElementsByTagName("table")[0];
             let row, cell1, cell2;
             for (let i = 0; i < earthquakes.features.length; i++) {
-                let year = caearthquakes.features[i].properties.year;
-                let month = caearthquakes.feature[i].properties.month;
-                let day = caearthquakes.feature[i].properties.day;
+                let year = earthquakes.features[i].properties.year;
+                let month = earthquakes.features[i].properties.month;
+                let day = earthquakes.features[i].properties.day;
 
                 let formattedDate = new Date(year, month - 1, day).toLocaleDateString("en-US");
 
                 row = table.insertRow(-1);
                 cell1 = row.insertCell(0);
                 cell2 = row.insertCell(1);
-                
-                cell1.innerHTML = caearthquakes.features[i].properties.magnitude;
+
+                cell1.innerHTML = earthquakes.features[i].properties.magnitude;
                 cell2.innerHTML = formattedDate;
             }
 
@@ -118,15 +118,15 @@
             //load data to the map as new layers and table on the side.
             map.on('load', function loadingData() {
 
-                map.addSource('caearthquakes', {
+                map.addSource('earthquakes', {
                     type: 'geojson',
-                    data: caearthquakes
+                    data: earthquakes
                 });
 
                 map.addLayer({
-                    'id': 'caearthquakes-layer',
+                    'id': 'earthquakes-layer',
                     'type': 'circle',
-                    'source': 'caearthquakes',
+                    'source': 'earthquakes',
                     'paint': {
                         'circle-radius': 8,
                         'circle-stroke-width': 2,
@@ -142,12 +142,12 @@
                 });
 
                 map.addLayer({
-                    'id': 'ca-layer',
+                    'id': 'california-layer',
                     'type': 'fill',
                     'source': 'california',
                     'paint': {
                         'fill-color': '#0080ff',
-                        'fill-opacity': 1
+                        'fill-opacity': 0.25
                     }
                 });
 
@@ -179,8 +179,8 @@
                     shouldSwitch = false;
                     /*Get the two elements you want to compare,
                     one from current row and one from the next:*/
-                    x = parseFloat(rows[i].getElementsByTagName("td")[1].innerHTML);
-                    y = parseFloat(rows[i + 1].getElementsByTagName("td")[1].innerHTML);
+                    x = parseFloat(rows[i].getElementsByTagName("td")[0].innerHTML);
+                    y = parseFloat(rows[i + 1].getElementsByTagName("td")[0].innerHTML);
                     //check if the two rows should switch place:
                     if (x < y) {
                         //if so, mark as a switch and break the loop:
