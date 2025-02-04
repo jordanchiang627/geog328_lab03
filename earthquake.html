@@ -3,17 +3,11 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Earthquake List</title>
+    <title>Earthquakes in Japan</title>
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
-
-    <!-- Including the Mapbox GL CSS file -->
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.css" rel="stylesheet">
-
-    <!-- Including the Mapbox GL JS file -->
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.js"></script>
-
     <style>
-        /* CSS styles for the layout and components */
         body {
             margin: 0;
             padding: 0;
@@ -48,12 +42,18 @@
 
         th,
         td {
-            text-align: left;
+            text-align: center;
             padding: 16px;
         }
 
         tr:nth-child(even) {
-            background-color: #f2f2f2;
+            background-color: #ababab;
+        }
+
+        @media screen and (max-width: 1024px) {
+            #side-panel {
+                display: none;
+            }
         }
     </style>
 </head>
@@ -62,14 +62,14 @@
     <main id="container">
         <div id="side-panel">
 
-            <h2>Earthquake List</h2>
+            <h2>Earthquake List (Japan)</h2>
             <button>Sort by Magnitude</button>
 
             <table>
                 <tr>
-                    <th>id</th>
-                    <th>magnitude</th>
-                    <th>timestamp</th>
+                    <th>Earthquake-ID</th>
+                    <th>Magnitude</th>
+                    <th>Date</th>
                 </tr>
             </table>
 
@@ -78,16 +78,14 @@
 
     </main>
     <script>
-        // Define the Mapbox access token
         mapboxgl.accessToken =
-            'pk.eyJ1IjoiamFrb2J6aGFvIiwiYSI6ImNpcms2YWsyMzAwMmtmbG5icTFxZ3ZkdncifQ.P9MBej1xacybKcDN_jehvw';
+            'pk.eyJ1Ijoiam9yZGFuY2hpYW5nIiwiYSI6ImNtMWpsOHk3ZzBmdXMya24zOW1lNnZicnkifQ.rZtkUmHr8cXOHm8wIBkrNQ';
 
-        // Create the map object
         let map = new mapboxgl.Map({
-            container: 'map', // container ID
-            style: 'mapbox://styles/mapbox/satellite-v9', // style URL
-            zoom: 5.5, // starting zoom
-            center: [138, 38] // starting center
+            container: 'map',
+            style: 'mapbox://styles/mapbox/dark-v11',
+            zoom: 4,
+            center: [138, 38]
         });
 
 
@@ -145,8 +143,8 @@
                     'type': 'fill',
                     'source': 'japan',
                     'paint': {
-                        'fill-color': '#0080ff', // blue color fill
-                        'fill-opacity': 0.5
+                        'fill-color': '#0080ff',
+                        'fill-opacity': 0.25
                     }
                 });
 
