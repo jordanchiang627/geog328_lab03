@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Index: Github Pages Test</title>
+    <title>California Earthquakes</title>
     <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.css" rel="stylesheet">
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.5.0/mapbox-gl.js"></script>
@@ -42,7 +42,7 @@
 
         th,
         td {
-            text-align: center;
+            text-align: left;
             padding: 16px;
         }
 
@@ -62,12 +62,11 @@
     <main id="container">
         <div id="side-panel">
 
-            <h2>Pages Tester Page</h2>
+            <h2>California Earthquakes Since 1769 (5.0+ Magnitude)</h2>
             <button>Sort by Magnitude</button>
 
             <table>
                 <tr>
-                    <th>Earthquake-ID</th>
                     <th>Magnitude</th>
                     <th>Date</th>
                 </tr>
@@ -84,46 +83,50 @@
         let map = new mapboxgl.Map({
             container: 'map',
             style: 'mapbox://styles/mapbox/dark-v11',
-            zoom: 4,
-            center: [138, 38]
+            zoom: 5,
+            center: [-117.736, 37.141]
         });
 
 
         async function geojsonFetch() {
 
-            let response, earthquakes, japan, table;
-            response = await fetch('assets/earthquakes.geojson');
-            earthquakes = await response.json();
-            response = await fetch('assets/japan.json');
-            japan = await response.json();
+            let response, caearthquakes, california, table;
+            response = await fetch('assets/california-earthquakes.geojson');
+            caearthquakes = await response.json();
+            response = await fetch('assets/california.geojson');
+            california = await response.json();
+
 
             table = document.getElementsByTagName("table")[0];
-            let row, cell1, cell2, cell3;
+            let row, cell1, cell2;
             for (let i = 0; i < earthquakes.features.length; i++) {
-                // Create an empty <tr> element and add it to the 1st position of the table:
+                let year = caearthquakes.features[i].properties.year;
+                let month = caearthquakes.feature[i].properties.month;
+                let day = caearthquakes.feature[i].properties.day;
+
+                let formattedDate = new Date(year, month - 1, day).toLocaleDateString("en-US");
+
                 row = table.insertRow(-1);
                 cell1 = row.insertCell(0);
                 cell2 = row.insertCell(1);
-                cell3 = row.insertCell(2);
-                cell1.innerHTML = earthquakes.features[i].properties.id;
-                cell2.innerHTML = earthquakes.features[i].properties.mag;
-                cell3.innerHTML = new Date(earthquakes.features[i].properties.time).toLocaleDateString(
-                    "en-US");
+                
+                cell1.innerHTML = caearthquakes.features[i].properties.magnitude;
+                cell2.innerHTML = formattedDate;
             }
 
 
             //load data to the map as new layers and table on the side.
             map.on('load', function loadingData() {
 
-                map.addSource('earthquakes', {
+                map.addSource('caearthquakes', {
                     type: 'geojson',
-                    data: earthquakes
+                    data: caearthquakes
                 });
 
                 map.addLayer({
-                    'id': 'earthquakes-layer',
+                    'id': 'caearthquakes-layer',
                     'type': 'circle',
-                    'source': 'earthquakes',
+                    'source': 'caearthquakes',
                     'paint': {
                         'circle-radius': 8,
                         'circle-stroke-width': 2,
@@ -133,18 +136,18 @@
                 });
 
 
-                map.addSource('japan', {
+                map.addSource('california', {
                     type: 'geojson',
-                    data: japan
+                    data: california
                 });
 
                 map.addLayer({
-                    'id': 'japan-layer',
+                    'id': 'ca-layer',
                     'type': 'fill',
-                    'source': 'japan',
+                    'source': 'california',
                     'paint': {
                         'fill-color': '#0080ff',
-                        'fill-opacity': 0.25
+                        'fill-opacity': 1
                     }
                 });
 
