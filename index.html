@@ -118,6 +118,21 @@
             //load data to the map as new layers and table on the side.
             map.on('load', function loadingData() {
 
+                map.addSource('california', {
+                    type: 'geojson',
+                    data: california
+                });
+
+                map.addLayer({
+                    'id': 'california-layer',
+                    'type': 'fill',
+                    'source': 'california',
+                    'paint': {
+                        'fill-color': '#0080ff',
+                        'fill-opacity': 0.25
+                    }
+                });
+
                 map.addSource('earthquakes', {
                     type: 'geojson',
                     data: earthquakes
@@ -132,22 +147,6 @@
                         'circle-stroke-width': 2,
                         'circle-color': 'red',
                         'circle-stroke-color': 'white'
-                    }
-                });
-
-
-                map.addSource('california', {
-                    type: 'geojson',
-                    data: california
-                });
-
-                map.addLayer({
-                    'id': 'california-layer',
-                    'type': 'fill',
-                    'source': 'california',
-                    'paint': {
-                        'fill-color': '#0080ff',
-                        'fill-opacity': 0.25
                     }
                 });
 
